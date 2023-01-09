@@ -1,0 +1,66 @@
+2)
+SELECT hotensv FROM sinh_vien 
+WHERE noisinh = "Hà Nội";
+
+3)
+SELECT * FROM sinh_vien 
+WHERE phai = "Nam" and noisinh = "TP Hồ Chí Minh";
+
+4)
+SELECT sinh_vien.masv, sinh_vien.hotensv
+FROM sinh_vien
+WHERE sinh_vien.masv IN (
+    SELECT masv 
+    FROM ket_qua, mon_hoc
+    WHERe mon_hoc.tenmonhoc = "Cơ sở dữ liệu" 
+    AND ket_qua.mamonhoc = mon_hoc.mamonhoc)
+
+5)
+SELECT COUNT(masv) FROM sinh_vien
+WHERE hotensv LIKE "Nguyễn%";
+
+6)
+SELECT sinh_vien.masv, sinh_vien.hotensv, lop.tenlop
+FROM sinh_vien, lop
+WHERE sinh_vien.malop = lop.malop
+
+7)
+SELECT DISTINCT sinh_vien.hotensv, COUNT( DISTINCT ket_qua.mamonhoc)
+FROM sinh_vien, ket_qua
+WHERE sinh_vien.masv = ket_qua.masv
+GROUP BY ket_qua.masv
+
+8)
+SELECT COUNT(masv)
+FROM sinh_vien
+WHERE phai = "Nữ";
+
+9)
+SELECT sinh_vien.hotensv,  sinh_vien.masv, COUNT(ket_qua.mamonhoc) AS "Số môn học"
+FROM sinh_vien, ket_qua
+WHERE sinh_vien.masv = ket_qua.masv
+GROUP BY sinh_vien.masv
+HAVING COUNT(ket_qua.mamonhoc) = (
+    SELECT COUNT(mon_hoc.mamonhoc) FROM mon_hoc)
+
+10)
+SELECT sinh_vien.masv, sinh_vien.hotensv, COUNT(phu_huynh.hotenphuhuynh) AS "Tình trạng bố mẹ"
+FROM phu_huynh, sinh_vien
+WHERE phu_huynh.masv = sinh_vien.masv
+GROUP BY sinh_vien.masv
+
+11)
+SELECT * FROM sinh_vien
+WHERE masv IN (
+    SELECT masv
+    FROM mon_hoc, ket_qua 
+    WHERE mon_hoc.tenmonhoc = "Cơ sở dữ liệu"
+    AND ket_qua.mamonhoc = mon_hoc.mamonhoc 
+    AND diem = (
+        SELECT MAX(diem)
+        FROM ket_qua, mon_hoc
+        WHERE mon_hoc.tenmonhoc = "Cơ sở dữ liệu"
+        AND mon_hoc.mamonhoc = ket_qua.mamonhoc))
+
+https://www.c10mt.com/2012/12/25-vi-du-ve-on-tap-sql-quan-ly-sinh-vien.html
+
